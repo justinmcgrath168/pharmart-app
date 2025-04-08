@@ -1,10 +1,10 @@
 Act as a professional software project manager who have many years of experience building many enterprise level saas web application. I want you to help me build an eCommerce saas application which is specific purpose for POS system, Ecommerce system, and Management System for Pharmacy. I'll name this project "Pharmart". This saas web application allow pharmacy owner to register and set up their business on our platform. After subscription to our package, they'll receive an eCommerce website as a subdomain of our platform for listing their products. their customer can sign in or sign up, purchase the products with online payment such as KHQR. Moreover, the user receive an admin web application, where they can manage their business such as managing products, inventory, incomes, expenses, customers, staffs, purchases, pos sale, etc. I want to use Shopify as my business model. First, Let's brainstorm the core feature of our project.
 
-### Core Features for Pharmart
+# Core Features for Pharmart
 
 ## Customer-Facing eCommerce Platform
 
-# User registration and authentication
+### User registration and authentication
 
 - Product catalog with pharmacy-specific categorization
 - Product search with filtering (by prescription requirements, health conditions, etc.)
@@ -15,7 +15,7 @@ Act as a professional software project manager who have many years of experience
 - Customer reviews and ratings
 - Refill reminders and subscription options for recurring medications
 
-# Pharmacy Management System
+### Pharmacy Management System
 
 - Inventory management with expiration date tracking
 - Multi-location inventory support
@@ -28,7 +28,7 @@ Act as a professional software project manager who have many years of experience
 - Staff management and role-based access control
 - Customer relationship management (medical history, purchases)
 
-# POS System
+### POS System
 
 - Barcode/QR code scanning
 - Prescription processing at POS
@@ -40,7 +40,7 @@ Act as a professional software project manager who have many years of experience
 - Returns and refunds processing
 - Shift management and cash drawer reconciliation
 
-# Analytics and Reporting
+### Analytics and Reporting
 
 - Sales reports and forecasting
 - Inventory valuation reports
@@ -51,7 +51,7 @@ Act as a professional software project manager who have many years of experience
 - Compliance reporting for regulatory requirements
 - Prescription fill statistics
 
-# Platform Administration (for Pharmart)
+### Platform Administration (for Pharmart)
 
 - Subscription management
 - Multi-tenant architecture
@@ -62,7 +62,7 @@ Act as a professional software project manager who have many years of experience
 - Usage analytics
 - Technical support system
 
-# Additional Pharmacy-Specific Features
+### Additional Pharmacy-Specific Features
 
 - Drug interaction checker
 - Integration with healthcare provider systems
