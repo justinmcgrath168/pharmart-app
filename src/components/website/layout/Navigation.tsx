@@ -299,7 +299,7 @@ export default function Navigation() {
             </Button>
             <Button className="bg-indigo-600 hover:bg-indigo-700" size="sm">
               Start Free Trial
-              <Badge className="ml-2 bg-indigo-500 text-xs">14 Days</Badge>
+              {/* <Badge className="ml-2 bg-indigo-500 text-xs">14 Days</Badge> */}
             </Button>
           </div>
 
