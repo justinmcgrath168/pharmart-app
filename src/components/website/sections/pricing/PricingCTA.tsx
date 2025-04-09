@@ -43,7 +43,7 @@ export default function PricingCTA() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-indigo-700"
+              className="border-white text-white bg-indigo-600"
             >
               Schedule Demo
             </Button>

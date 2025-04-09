@@ -4,7 +4,6 @@
  */
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ComparisonTable from "@/components/website/sections/features/ComparisonTable";
 import EcommerceFeatures from "@/components/website/sections/features/EcommerceFeatures";
 import FeatureHero from "@/components/website/sections/features/FeatureHero";
 import FeaturesCallToAction from "@/components/website/sections/features/FeaturesCallToAction";
@@ -46,16 +45,8 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Features Comparison Table */}
-      <ComparisonTable />
-
-      {/* Testimonials Section */}
       <FeatureTestimonials />
-
-      {/* Integration Section */}
       <IntegrationSection />
-
-      {/* Call to Action */}
       <FeaturesCallToAction />
     </main>
   );

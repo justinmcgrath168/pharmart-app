@@ -25,8 +25,8 @@ export default function PricingSection() {
     {
       name: "Starter",
       description: "Perfect for small independent pharmacies",
-      priceMonthly: 99,
-      priceYearly: 89,
+      priceMonthly: 25,
+      priceYearly: 20,
       features: [
         "eCommerce store with 500 product limit",
         "Basic POS system",
@@ -44,8 +44,8 @@ export default function PricingSection() {
     {
       name: "Professional",
       description: "Ideal for growing pharmacy businesses",
-      priceMonthly: 199,
-      priceYearly: 179,
+      priceMonthly: 50,
+      priceYearly: 40,
       popular: true,
       features: [
         "eCommerce store with 2,000 product limit",
@@ -65,8 +65,8 @@ export default function PricingSection() {
     {
       name: "Enterprise",
       description: "For pharmacy chains and high-volume businesses",
-      priceMonthly: 349,
-      priceYearly: 299,
+      priceMonthly: 200,
+      priceYearly: 160,
       features: [
         "Unlimited products",
         "Full-featured POS system",
@@ -125,7 +125,7 @@ export default function PricingSection() {
                 variant="outline"
                 className="ml-2 bg-green-50 text-green-700 hover:bg-green-50 border-green-200"
               >
-                Save 10%
+                Save 20%
               </Badge>
             </div>
           </div>

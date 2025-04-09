@@ -318,14 +318,14 @@ export default function PricingTables() {
           <p className="text-sm text-zinc-500 mb-2">
             All plans come with a 14-day free trial. No credit card required.
           </p>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <Link
               href="/pricing/comparison"
               className="text-indigo-600 font-medium text-sm hover:underline"
             >
               View detailed plan comparison →
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

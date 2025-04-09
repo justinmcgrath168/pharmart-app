@@ -92,7 +92,7 @@ export default function PricingFAQ() {
             ))}
           </Accordion>
 
-          <div className="mt-12 text-center">
+          {/* <div className="mt-12 text-center">
             <p className="text-zinc-600 mb-4">
               Still have questions? We&apos;re here to help.
             </p>
@@ -104,7 +104,7 @@ export default function PricingFAQ() {
                 Schedule a Demo
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

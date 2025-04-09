@@ -96,36 +96,33 @@ export default function PricingComparison() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
+        <div className="max-w-full mx-auto rounded-lg overflow-hidden shadow-lg">
           <Table>
-            <TableCaption>
+            <TableCaption className="p-4 text-sm text-zinc-500">
               Based on average pricing and features of leading pharmacy
               management systems.
             </TableCaption>
-            <TableHeader className="bg-white">
+            <TableHeader className="bg-zinc-100">
               <TableRow>
-                <TableHead className="w-[300px]">Feature</TableHead>
-                <TableHead className="text-center bg-indigo-50 w-[200px]">
+                <TableHead className="w-[300px] p-4">Feature</TableHead>
+                <TableHead className="text-center bg-indigo-50 w-[200px] p-4">
                   <div className="font-bold text-indigo-600">Pharmart</div>
                 </TableHead>
-                <TableHead className="text-center w-[200px]">
+                <TableHead className="text-center w-[200px] p-4">
                   <div className="font-bold">Traditional Solutions</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {comparisonItems.map((item, index) => (
-                <TableRow
-                  key={index}
-                  className={index % 2 === 0 ? "bg-white" : "bg-zinc-50"}
-                >
-                  <TableCell className="font-medium">
+                <TableRow key={index} className="bg-zinc-50">
+                  <TableCell className="font-medium p-4">
                     <div>{item.feature}</div>
                     <div className="text-xs text-zinc-500">
                       {item.description}
                     </div>
                   </TableCell>
-                  <TableCell className="text-center bg-indigo-50">
+                  <TableCell className="text-center bg-indigo-50 p-4">
                     {typeof item.pharmart === "boolean" ? (
                       item.pharmart ? (
                         <CheckCircle2 className="h-5 w-5 text-green-600 mx-auto" />
@@ -138,7 +135,7 @@ export default function PricingComparison() {
                       </span>
                     )}
                   </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell className="text-center p-4">
                     {typeof item.competitors === "boolean" ? (
                       item.competitors ? (
                         <CheckCircle2 className="h-5 w-5 text-green-600 mx-auto" />
@@ -163,7 +160,7 @@ export default function PricingComparison() {
           </Table>
         </div>
 
-        <div className="max-w-2xl mx-auto mt-12 bg-white p-6 rounded-lg shadow border border-zinc-200">
+        {/* <div className="max-w-2xl mx-auto mt-12 bg-white p-6 rounded-lg shadow border border-zinc-200">
           <h3 className="text-xl font-bold mb-4">Why Pharmart is Different</h3>
           <p className="text-zinc-600 mb-6">
             Unlike traditional pharmacy software that requires multiple systems,
@@ -208,7 +205,7 @@ export default function PricingComparison() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

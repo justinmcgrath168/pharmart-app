@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import PricingTables from "@/components/website/pricing/PricingTables";
-import PricingCalculator from "@/components/website/pricing/PricingCalculator";
-import PricingComparison from "@/components/website/pricing/PricingComparision";
-import PricingTestimonials from "@/components/website/pricing/PricingTestimonials";
-import PricingFAQ from "@/components/website/pricing/PricingFAQ";
-import PricingCTA from "@/components/website/pricing/PricingCTA";
+import PricingComparison from "@/components/website/sections/pricing/PricingComparision";
+import PricingTestimonials from "@/components/website/sections/pricing/PricingTestimonials";
+import PricingFAQ from "@/components/website/sections/pricing/PricingFAQ";
+import PricingCTA from "@/components/website/sections/pricing/PricingCTA";
+import ComparisonTable from "@/components/website/sections/pricing/ComparisonTable";
+import PricingSection from "@/components/website/sections/PricingSection";
 
 export default function PricingPage() {
   return (
@@ -30,7 +30,7 @@ export default function PricingPage() {
             </p>
 
             {/* Pricing Toggle */}
-            <div className="flex items-center justify-center space-x-4 mb-10">
+            {/* <div className="flex items-center justify-center space-x-4 mb-10">
               <Label
                 htmlFor="pricing-toggle"
                 className="text-lg font-medium cursor-pointer"
@@ -49,7 +49,7 @@ export default function PricingPage() {
               >
                 Annual
               </Label>
-            </div>
+            </div> */}
 
             {/* Feature Pills */}
             <div className="flex flex-wrap justify-center gap-3 mb-8">
@@ -71,19 +71,10 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Pricing Tables */}
-      <PricingTables />
-
-      {/* Pricing Calculator */}
-      <PricingCalculator />
-
-      {/* Comparison Section */}
+      <PricingSection />
+      <ComparisonTable />
       <PricingComparison />
-
-      {/* Testimonials */}
       <PricingTestimonials />
-
-      {/* FAQ Section */}
       <PricingFAQ />
 
       {/* Enterprise Section */}

@@ -190,6 +190,7 @@ export default function ComparisonTable() {
     <section className="py-12 md:py-24 bg-zinc-50">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-12">
+          <Badge className="mb-4 bg-indigo-600">Comparison</Badge>
           <h2 className="text-3xl font-bold tracking-tighter mb-4">
             Compare Features Across Plans
           </h2>
@@ -302,21 +303,6 @@ export default function ComparisonTable() {
               </TableBody>
             </Table>
           </TooltipProvider>
-        </div>
-
-        <div className="max-w-3xl mx-auto text-center mt-8">
-          <p className="text-zinc-600 mb-6">
-            Not sure which plan is right for you? Schedule a demo with our team
-            to get personalized recommendations.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <div className="rounded-lg bg-indigo-600 px-4 py-2 text-white font-medium hover:bg-indigo-700 cursor-pointer">
-              Schedule a Demo
-            </div>
-            <div className="rounded-lg bg-white border border-zinc-300 px-4 py-2 font-medium hover:bg-zinc-50 cursor-pointer">
-              View Full Pricing Details
-            </div>
-          </div>
         </div>
       </div>
     </section>

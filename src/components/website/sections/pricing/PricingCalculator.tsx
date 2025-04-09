@@ -74,7 +74,7 @@ export default function PricingCalculator() {
     // Calculate software cost savings
     const softwareSavings =
       currentSoftwareCost -
-      (pharmacySize === "small" ? 99 : pharmacySize === "medium" ? 199 : 349);
+      (pharmacySize === "small" ? 25 : pharmacySize === "medium" ? 50 : 200);
 
     // Total monthly benefit
     const totalMonthlySavings =
@@ -83,7 +83,7 @@ export default function PricingCalculator() {
 
     // ROI calculation
     const monthlyInvestment =
-      pharmacySize === "small" ? 99 : pharmacySize === "medium" ? 199 : 349;
+      pharmacySize === "small" ? 25 : pharmacySize === "medium" ? 50 : 200;
     const annualROI =
       ((totalMonthlyBenefit * 12) / (monthlyInvestment * 12)) * 100;
 
@@ -100,7 +100,7 @@ export default function PricingCalculator() {
   const results = calculateROI();
 
   return (
-    <section className="py-12 md:py-24">
+    <section className="py-12 md:py-24" id="calculator">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 mb-4">

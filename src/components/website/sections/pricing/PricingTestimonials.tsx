@@ -79,7 +79,7 @@ export default function PricingTestimonials() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <p className="text-zinc-600">
             Join hundreds of pharmacies that are getting real value from
             Pharmart.
@@ -92,7 +92,7 @@ export default function PricingTestimonials() {
               Calculate Your ROI
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

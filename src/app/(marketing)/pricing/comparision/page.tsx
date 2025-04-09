@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import PricingCTA from "@/components/website/pricing/PricingCTA";
+import PricingCTA from "@/components/website/sections/pricing/PricingCTA";
 
 export default function PlanComparisonPage() {
   const featureCategories = [
