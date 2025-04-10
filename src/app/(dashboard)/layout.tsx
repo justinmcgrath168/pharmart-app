@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <DashboardHeader />
       <div className="flex-1 flex">
         <DashboardSidebar />
-        <main className="flex-1 pb-8">{children}</main>
+        <main className="flex-1 py-8 px-32">{children}</main>
       </div>
     </div>
   );

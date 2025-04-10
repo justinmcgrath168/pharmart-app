@@ -35,7 +35,6 @@ import {
   Phone,
   DollarSign,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
