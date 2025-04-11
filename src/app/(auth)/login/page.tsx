@@ -1,10 +1,10 @@
 /**
  * @file src/app/(auth)/login/page.tsx
- * Updated login page for the split-screen layout
+ * Updated login page with localStorage fix
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -57,6 +57,18 @@ export default function LoginPage() {
     },
   });
 
+  // Load remembered email if available (safely in useEffect for client-side only)
+  useEffect(() => {
+    // Check if we're in the browser environment
+    if (typeof window !== "undefined") {
+      const rememberedEmail = localStorage.getItem("rememberEmail");
+      if (rememberedEmail) {
+        form.setValue("email", rememberedEmail);
+        form.setValue("rememberMe", true);
+      }
+    }
+  }, [form]);
+
   // Handle form submission
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
@@ -68,11 +80,13 @@ export default function LoginPage() {
         description: "Redirecting to dashboard...",
       });
 
-      // Store remember me preference if enabled
-      if (data.rememberMe) {
-        window.localStorage.setItem("rememberEmail", data.email);
-      } else {
-        window.localStorage.removeItem("rememberEmail");
+      // Store remember me preference if enabled (safely with window check)
+      if (typeof window !== "undefined") {
+        if (data.rememberMe) {
+          localStorage.setItem("rememberEmail", data.email);
+        } else {
+          localStorage.removeItem("rememberEmail");
+        }
       }
 
       // Redirect to the dashboard
@@ -85,15 +99,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
-  // Load remembered email if available
-  useState(() => {
-    const rememberedEmail = localStorage.getItem("rememberEmail");
-    if (rememberedEmail) {
-      form.setValue("email", rememberedEmail);
-      form.setValue("rememberMe", true);
-    }
-  });
 
   return (
     <div className="w-full">
