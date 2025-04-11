@@ -1,6 +1,6 @@
 /**
  * @file src/components/forms/signup/subscription-plan-form.tsx
- * Subscription plan selection form for the fourth step of signup process
+ * Updated subscription plan form for the final step of signup process
  */
 "use client";
 
@@ -10,6 +10,8 @@ import {
   FormItem,
   FormControl,
   FormMessage,
+  FormLabel,
+  FormDescription,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SignupData } from "@/lib/validators/signup";
@@ -22,81 +24,23 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  CheckCircle2,
-  Star,
-  Zap,
-  Building2,
-  CheckIcon,
-  InfoIcon,
-} from "lucide-react";
-
-// Subscription plans
-const SUBSCRIPTION_PLANS = [
-  {
-    id: "basic",
-    title: "Basic",
-    price: "$29",
-    billingPeriod: "per month",
-    description: "Essential tools for small independent pharmacies",
-    features: [
-      "Online store with up to 500 products",
-      "Basic inventory management",
-      "Standard POS system",
-      "Email support",
-      "Mobile responsive storefront",
-      "Basic analytics and reporting",
-    ],
-    badge: null,
-    icon: Building2,
-  },
-  {
-    id: "professional",
-    title: "Professional",
-    price: "$79",
-    billingPeriod: "per month",
-    description: "Advanced tools for growing pharmacies",
-    features: [
-      "Online store with unlimited products",
-      "Advanced inventory management",
-      "Full-featured POS system",
-      "Priority email and chat support",
-      "Custom domain name",
-      "Advanced analytics and reporting",
-      "Multi-staff accounts",
-      "Prescription refill reminders",
-      "Customer loyalty program",
-    ],
-    badge: "Popular",
-    icon: Star,
-  },
-  {
-    id: "enterprise",
-    title: "Enterprise",
-    price: "$199",
-    billingPeriod: "per month",
-    description: "Complete solution for pharmacy chains",
-    features: [
-      "Everything in Professional plan",
-      "Multiple store locations",
-      "API access for custom integrations",
-      "Dedicated account manager",
-      "24/7 premium support",
-      "Custom branding options",
-      "Advanced security features",
-      "Bulk import/export tools",
-      "Priority feature updates",
-    ],
-    badge: null,
-    icon: Zap,
-  },
-];
+import { Checkbox } from "@/components/ui/checkbox";
+import { CheckCircle2, InfoIcon, CheckIcon } from "lucide-react";
+import Link from "next/link";
+import { SUBSCRIPTION_PLANS } from "@/lib/constants/signup";
 
 const SubscriptionPlanForm = () => {
   const form = useFormContext<SignupData>();
 
   return (
     <div className="space-y-6">
+      <div className="space-y-4">
+        <h3 className="text-sm font-medium text-muted-foreground">
+          Select a subscription plan and complete your registration to start
+          using Pharmart.
+        </h3>
+      </div>
+
       <div className="flex items-start gap-2 pb-4">
         <InfoIcon className="h-5 w-5 mt-0.5 text-amber-500" />
         <div className="text-sm text-muted-foreground">
@@ -120,7 +64,7 @@ const SubscriptionPlanForm = () => {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid gap-6 md:grid-cols-3"
+                className="grid gap-6 md:grid-cols-2"
               >
                 {SUBSCRIPTION_PLANS.map((plan) => (
                   <Card
@@ -130,12 +74,12 @@ const SubscriptionPlanForm = () => {
                     }`}
                     onClick={() => field.onChange(plan.id)}
                   >
-                    {plan.badge && (
+                    {plan.recommended && (
                       <Badge
                         className="absolute top-0 right-0 rounded-bl-lg rounded-tr-lg"
                         variant="default"
                       >
-                        {plan.badge}
+                        Recommended
                       </Badge>
                     )}
 
@@ -146,13 +90,6 @@ const SubscriptionPlanForm = () => {
                             value={plan.id}
                             id={plan.id}
                             className="sr-only"
-                          />
-                          <plan.icon
-                            className={`h-5 w-5 ${
-                              field.value === plan.id
-                                ? "text-primary"
-                                : "text-muted-foreground"
-                            }`}
                           />
                           <CardTitle className="text-lg">
                             {plan.title}
@@ -189,6 +126,44 @@ const SubscriptionPlanForm = () => {
               </RadioGroup>
             </FormControl>
             <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="acceptTerms"
+        render={({ field }) => (
+          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormControl>
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+            <div className="space-y-1 leading-none">
+              <FormLabel>Terms and Conditions</FormLabel>
+              <FormDescription>
+                I agree to the{" "}
+                <Link
+                  href="/terms"
+                  className="text-primary underline underline-offset-4"
+                  target="_blank"
+                >
+                  terms of service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy"
+                  className="text-primary underline underline-offset-4"
+                  target="_blank"
+                >
+                  privacy policy
+                </Link>
+                .
+              </FormDescription>
+              <FormMessage />
+            </div>
           </FormItem>
         )}
       />

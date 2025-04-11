@@ -1,6 +1,6 @@
 /**
  * @file src/lib/validators/signup.ts
- * Validation schema for signup form data
+ * Updated validation schema for the 3-step signup process
  */
 import { z } from "zod";
 
@@ -9,28 +9,22 @@ const PHONE_REGEX =
   /^(\+\d{1,3})?\s?\(?\d{1,4}\)?[\s.-]?\d{1,4}[\s.-]?\d{1,9}$/;
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const TIME_REGEX = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-
-// Operating hours schema
-const operatingHoursSchema = z.object({
-  isOpen: z.boolean(),
-  open: z.string().regex(TIME_REGEX, "Invalid time format").optional(),
-  close: z.string().regex(TIME_REGEX, "Invalid time format").optional(),
-});
+const SUBDOMAIN_REGEX = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
 
 // Business address schema
 const businessAddressSchema = z.object({
-  street: z.string().min(1, "Street address is required"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State/Province is required"),
-  postalCode: z.string().min(1, "Postal code is required"),
-  country: z.string().min(1, "Country is required"),
+  province: z.string().min(1, "Province is required"),
+  district: z.string().min(1, "District is required"),
+  commune: z.string().min(1, "Commune is required"),
+  village: z.string().min(1, "Village is required"),
+  streetAddress: z.string().min(1, "Street address is required"),
 });
 
 // Main signup schema
 export const signupSchema = z
   .object({
-    // Step 1: Account Details
+    // Step 1: User Account Information
+    fullName: z.string().min(2, "Full name is required"),
     email: z.string().email("Please enter a valid email address"),
     password: z
       .string()
@@ -40,40 +34,31 @@ export const signupSchema = z
         "Password must include uppercase, lowercase, number, and special character"
       ),
     confirmPassword: z.string(),
-    fullName: z.string().min(2, "Full name is required"),
-    phoneNumber: z
-      .string()
-      .regex(PHONE_REGEX, "Please enter a valid phone number"),
 
-    // Step 2: Business Details
+    // Step 2: Business Information
     businessName: z.string().min(2, "Business name is required"),
     businessType: z.string(),
     businessDescription: z.string().optional(),
-    businessLogo: z.string().optional(),
-    businessAddress: businessAddressSchema,
-
-    // Step 3: Pharmacy Details
-    pharmacyLicenseNumber: z.string().min(1, "License number is required"),
-    licenseDocument: z.string().optional(),
-    pharmacistInCharge: z.string().min(1, "Pharmacist name is required"),
-    pharmacistLicenseNumber: z
+    businessLicenseNumber: z.string().optional(),
+    subdomain: z
       .string()
-      .min(1, "Pharmacist license number is required"),
-    operatingHours: z.object({
-      monday: operatingHoursSchema,
-      tuesday: operatingHoursSchema,
-      wednesday: operatingHoursSchema,
-      thursday: operatingHoursSchema,
-      friday: operatingHoursSchema,
-      saturday: operatingHoursSchema,
-      sunday: operatingHoursSchema,
-    }),
-    servicesOffered: z.array(z.string()).optional(),
+      .min(3, "Subdomain must be at least 3 characters")
+      .max(63, "Subdomain cannot exceed 63 characters")
+      .regex(
+        SUBDOMAIN_REGEX,
+        "Subdomain can only contain lowercase letters, numbers, and hyphens. It cannot start or end with a hyphen."
+      ),
+    businessPhone: z
+      .string()
+      .regex(PHONE_REGEX, "Please enter a valid phone number"),
+    businessEmail: z
+      .string()
+      .email("Please enter a valid business email address"),
+    businessAddress: businessAddressSchema,
+    businessLogo: z.string().optional(),
 
-    // Step 4: Subscription Plan
+    // Step 3: Subscription Plan
     subscriptionPlan: z.string().min(1, "Please select a subscription plan"),
-
-    // Step 5: Terms and Conditions
     acceptTerms: z.boolean().refine((val) => val === true, {
       message: "You must agree to the terms and conditions",
     }),

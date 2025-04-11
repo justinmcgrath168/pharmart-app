@@ -1,6 +1,6 @@
 /**
  * @file src/app/(auth)/signup/page.tsx
- * Main signup page component for Pharmart registration flow
+ * Updated signup page for the split-screen layout
  */
 "use client";
 
@@ -19,54 +19,49 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowRight, ArrowLeft, Check } from "lucide-react";
-import { signUpSteps } from "@/lib/constants/signup";
 import Link from "next/link";
-import AccountDetailsForm from "@/components/forms/signup/account-details-form";
-import BusinessDetailsForm from "@/components/forms/signup/business-details-form";
-import PharmacyDetailsForm from "@/components/forms/signup/pharmacy-details-form";
-import SubscriptionPlanForm from "@/components/forms/signup/subscription-plan-form";
-import ReviewInformationForm from "@/components/forms/signup/review-information-form";
-import SignupSuccessPage from "@/components/forms/signup/signup-success";
+import { signUpSteps } from "@/lib/constants/signup";
 import { SignupData, signupSchema } from "@/lib/validators/signup";
 import { createUserAccount } from "@/lib/services/auth";
-import LogoIcon from "@/components/logo-icon";
+
+// Step Components
+import AccountDetailsForm from "@/components/forms/signup/account-details-form";
+import BusinessDetailsForm from "@/components/forms/signup/business-details-form";
+import SubscriptionPlanForm from "@/components/forms/signup/subscription-plan-form";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
   const router = useRouter();
 
   const methods = useForm<SignupData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      // Step 1: User Account Information
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
-      fullName: "",
-      phoneNumber: "",
+
+      // Step 2: Business Information
       businessName: "",
       businessType: "independent",
+      businessDescription: "",
+      businessLicenseNumber: "",
+      subdomain: "",
+      businessPhone: "",
+      businessEmail: "",
       businessAddress: {
-        street: "",
-        city: "",
-        state: "",
-        postalCode: "",
-        country: "",
+        province: "",
+        district: "",
+        commune: "",
+        village: "",
+        streetAddress: "",
       },
-      pharmacyLicenseNumber: "",
-      pharmacistInCharge: "",
-      pharmacistLicenseNumber: "",
-      operatingHours: {
-        monday: { open: "09:00", close: "18:00", isOpen: true },
-        tuesday: { open: "09:00", close: "18:00", isOpen: true },
-        wednesday: { open: "09:00", close: "18:00", isOpen: true },
-        thursday: { open: "09:00", close: "18:00", isOpen: true },
-        friday: { open: "09:00", close: "18:00", isOpen: true },
-        saturday: { open: "09:00", close: "13:00", isOpen: true },
-        sunday: { open: "09:00", close: "13:00", isOpen: false },
-      },
-      servicesOffered: [],
+      businessLogo: "",
+
+      // Step 3: Subscription Plan
       subscriptionPlan: "",
       acceptTerms: false,
     },
@@ -98,16 +93,13 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupData) => {
     setIsSubmitting(true);
     try {
-      const response = await createUserAccount(data);
-      // Move to success page
-      setIsComplete(true);
-      // Reset form
-      methods.reset();
+      await createUserAccount(data);
+
+      // Redirect to verification page with email
+      router.push(`/verification?email=${encodeURIComponent(data.email)}`);
     } catch (error: any) {
-      toast({
-        title: "Registration failed",
+      toast("Registration failed", {
         description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -121,11 +113,7 @@ export default function SignupPage() {
       case 1:
         return <BusinessDetailsForm />;
       case 2:
-        return <PharmacyDetailsForm />;
-      case 3:
         return <SubscriptionPlanForm />;
-      case 4:
-        return <ReviewInformationForm />;
       default:
         return null;
     }
@@ -133,38 +121,27 @@ export default function SignupPage() {
 
   const isLastStep = currentStep === totalSteps - 1;
 
-  if (isComplete) {
-    return <SignupSuccessPage />;
-  }
-
   return (
-    <div className="container max-w-3xl py-10 px-4 md:px-6">
-      <div className="flex justify-center mb-8">
-        <Link href="/" className="flex items-center space-x-2">
-          <LogoIcon className="h-10 w-10" />
-          <span className="text-2xl font-bold text-primary">Pharmart</span>
-        </Link>
-      </div>
-
-      <FormProvider {...methods}>
-        <Card className="w-full shadow-lg">
-          <CardHeader className="space-y-2">
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-2xl">
-                {signUpSteps[currentStep].title}
-              </CardTitle>
-              <div className="text-sm text-muted-foreground">
-                Step {currentStep + 1} of {totalSteps}
-              </div>
+    <div className="w-full">
+      <Card className="w-full shadow-lg border-0 md:border">
+        <CardHeader className="space-y-2">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-xl font-bold">
+              {signUpSteps[currentStep].title}
+            </CardTitle>
+            <div className="text-sm text-muted-foreground">
+              Step {currentStep + 1} of {totalSteps}
             </div>
-            <Progress value={progress} className="h-2" />
-            <CardDescription>
-              {signUpSteps[currentStep].description}
-            </CardDescription>
-          </CardHeader>
+          </div>
+          <Progress value={progress} className="h-2" />
+          <CardDescription>
+            {signUpSteps[currentStep].description}
+          </CardDescription>
+        </CardHeader>
 
+        <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <CardContent>{renderStepContent()}</CardContent>
+            <CardContent className="pt-2">{renderStepContent()}</CardContent>
 
             <CardFooter className="flex justify-between pt-6 border-t">
               <Button
@@ -202,14 +179,14 @@ export default function SignupPage() {
               )}
             </CardFooter>
           </form>
-        </Card>
-      </FormProvider>
+        </FormProvider>
+      </Card>
 
-      <div className="mt-6 text-center text-sm text-muted-foreground">
+      <div className="mt-4 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-medium text-primary underline-offset-4 hover:underline"
+          className="font-medium text-primary hover:underline underline-offset-4"
         >
           Log in
         </Link>

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  images: {
+    domains: ["storage.pharmart.app"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

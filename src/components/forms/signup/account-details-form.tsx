@@ -1,6 +1,6 @@
 /**
  * @file src/components/forms/signup/account-details-form.tsx
- * Account details form for the first step of signup process
+ * Updated account details form for the first step of signup process
  */
 "use client";
 
@@ -14,30 +14,69 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
 import { SignupData } from "@/lib/validators/signup";
-import { Eye, EyeOff, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { Eye, EyeOff, HelpCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 import { PasswordStrengthIndicator } from "@/components/ui/password-strength";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const AccountDetailsForm = () => {
   const form = useFormContext<SignupData>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  // Calculate password strength
+  useEffect(() => {
+    const password = form.watch("password") || "";
+    const checks = {
+      minLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasLowerCase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecialChar: /[^A-Za-z0-9]/.test(password),
+    };
+
+    // Calculate strength based on checks
+    const trueChecks = Object.values(checks).filter(Boolean).length;
+    setPasswordStrength((trueChecks / 5) * 100);
+  }, [form.watch("password")]);
+
+  // Show strength indicator when password field is focused or if password isn't strong enough
+  const shouldShowStrengthIndicator = () => {
+    return (
+      isPasswordFocused ||
+      (passwordStrength < 80 && form.watch("password")?.length > 0)
+    );
+  };
 
   return (
     <div className="space-y-6">
-      <Card className="border-muted bg-muted/30">
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-2 text-amber-600">
-            <AlertCircle className="h-5 w-5" />
-            <p className="text-sm">
-              Your account details will be used to manage your Pharmart admin
-              panel access.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <h3 className="text-sm font-medium text-muted-foreground">
+          Enter your details to create an account for managing your pharmacy.
+        </h3>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="fullName"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Full Name</FormLabel>
+            <FormControl>
+              <Input placeholder="John Doe" autoComplete="name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       <FormField
         control={form.control}
@@ -54,54 +93,45 @@ const AccountDetailsForm = () => {
               />
             </FormControl>
             <FormDescription>
-              We&apos;ll send you verification email to this address
+              We'll send you a verification email to this address
             </FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" autoComplete="name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="phoneNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone Number</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="+1 (555) 000-0000"
-                  type="tel"
-                  autoComplete="tel"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
       <FormField
         control={form.control}
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Password</FormLabel>
+            <div className="flex items-center justify-between">
+              <FormLabel>Password</FormLabel>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center text-sm font-medium text-muted-foreground"
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent className="w-80 p-2">
+                    <p className="text-xs">
+                      Password must contain:
+                      <ul className="list-disc pl-4 mt-1 space-y-1">
+                        <li>At least 8 characters</li>
+                        <li>At least one uppercase letter (A-Z)</li>
+                        <li>At least one lowercase letter (a-z)</li>
+                        <li>At least one number (0-9)</li>
+                        <li>At least one special character (@$!%*?&)</li>
+                      </ul>
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <FormControl>
               <div className="relative">
                 <Input
@@ -109,12 +139,15 @@ const AccountDetailsForm = () => {
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   className="pr-10"
+                  onFocus={() => setIsPasswordFocused(true)}
+                  onBlur={() => setIsPasswordFocused(false)}
                   {...field}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -124,11 +157,9 @@ const AccountDetailsForm = () => {
                 </button>
               </div>
             </FormControl>
-            <PasswordStrengthIndicator password={field.value} />
-            <FormDescription>
-              Password must contain at least 8 characters, including uppercase,
-              lowercase, numbers, and special characters
-            </FormDescription>
+            {shouldShowStrengthIndicator() && (
+              <PasswordStrengthIndicator password={field.value} />
+            )}
             <FormMessage />
           </FormItem>
         )}
@@ -153,6 +184,7 @@ const AccountDetailsForm = () => {
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  tabIndex={-1}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />

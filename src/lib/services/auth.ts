@@ -1,6 +1,6 @@
 /**
  * @file src/lib/services/auth.ts
- * Authentication service for handling signup, login, and other auth operations
+ * Updated authentication service for the 3-step signup process
  */
 import { SignupData } from "../validators/signup";
 import { createClient } from "@supabase/supabase-js";
@@ -24,8 +24,8 @@ export async function createUserAccount(data: SignupData): Promise<any> {
       options: {
         data: {
           full_name: data.fullName,
-          phone: data.phoneNumber,
         },
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
 
@@ -45,24 +45,30 @@ export async function createUserAccount(data: SignupData): Promise<any> {
         business_name: data.businessName,
         business_type: data.businessType,
         business_description: data.businessDescription || "",
+        business_license_number: data.businessLicenseNumber || "",
         business_logo: data.businessLogo || null,
-        business_address: data.businessAddress,
-        pharmacy_license_number: data.pharmacyLicenseNumber,
-        license_document: data.licenseDocument || null,
-        pharmacist_in_charge: data.pharmacistInCharge,
-        pharmacist_license_number: data.pharmacistLicenseNumber,
-        operating_hours: data.operatingHours,
-        services_offered: data.servicesOffered || [],
+        business_phone: data.businessPhone,
+        business_email: data.businessEmail,
+        business_address: {
+          province: data.businessAddress.province,
+          district: data.businessAddress.district,
+          commune: data.businessAddress.commune,
+          village: data.businessAddress.village,
+          street_address: data.businessAddress.streetAddress,
+        },
+        subdomain: data.subdomain,
         subscription_plan: data.subscriptionPlan,
         is_verified: false, // Default to false until admin verification
         trial_ends_at: new Date(
           Date.now() + 14 * 24 * 60 * 60 * 1000
         ).toISOString(), // 14 days from now
-        subdomain: generateSubdomain(data.businessName),
         created_at: new Date().toISOString(),
       });
 
     if (profileError) {
+      // Log the error for debugging
+      console.error("Profile creation error:", profileError);
+
       // Attempt to clean up auth user if profile creation fails
       await supabase.auth.admin.deleteUser(authData.user.id);
       throw new Error(
@@ -70,55 +76,10 @@ export async function createUserAccount(data: SignupData): Promise<any> {
       );
     }
 
-    // Step 3: Send verification email
-    await sendVerificationEmail(data.email);
-
     return authData.user;
   } catch (error: any) {
     console.error("Signup error:", error);
     throw new Error(error.message || "An error occurred during signup");
-  }
-}
-
-/**
- * Generate a subdomain based on business name
- * @param businessName - Business name to convert to subdomain
- * @returns Sanitized subdomain string
- */
-function generateSubdomain(businessName: string): string {
-  // Convert to lowercase, remove special characters, replace spaces with hyphens
-  let subdomain = businessName
-    .toLowerCase()
-    .replace(/[^\w\s]/gi, "")
-    .replace(/\s+/g, "-")
-    .trim();
-
-  // Ensure it starts with an alphanumeric character
-  if (!/^[a-z0-9]/.test(subdomain)) {
-    subdomain = "pharm-" + subdomain;
-  }
-
-  // Add random digits if too short
-  if (subdomain.length < 5) {
-    const randomDigits = Math.floor(1000 + Math.random() * 9000);
-    subdomain = `${subdomain}-${randomDigits}`;
-  }
-
-  return subdomain;
-}
-
-/**
- * Send a verification email to the user
- * @param email - User's email address
- */
-async function sendVerificationEmail(email: string): Promise<void> {
-  try {
-    // This would typically call a serverless function or API route
-    // For now, we'll just mock this with a success message
-    console.log(`Verification email sent to ${email}`);
-  } catch (error) {
-    console.error("Failed to send verification email:", error);
-    // Non-blocking - we don't want to fail the signup if just the email fails
   }
 }
 
@@ -220,5 +181,31 @@ export async function getCurrentUser() {
   } catch (error) {
     console.error("Get current user error:", error);
     return null;
+  }
+}
+
+/**
+ * Resend verification email
+ * @param email - User's email address
+ * @returns Promise with success or error
+ */
+export async function resendVerification(email: string): Promise<void> {
+  try {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  } catch (error: any) {
+    console.error("Resend verification error:", error);
+    throw new Error(
+      error.message || "An error occurred while resending verification email"
+    );
   }
 }
