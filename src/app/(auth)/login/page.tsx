@@ -70,18 +70,16 @@ export default function LoginPage() {
 
       // Store remember me preference if enabled
       if (data.rememberMe) {
-        localStorage.setItem("rememberEmail", data.email);
+        window.localStorage.setItem("rememberEmail", data.email);
       } else {
-        localStorage.removeItem("rememberEmail");
+        window.localStorage.removeItem("rememberEmail");
       }
 
       // Redirect to the dashboard
       router.push("/dashboard");
     } catch (error: any) {
-      toast({
-        title: "Login failed",
+      toast("Login failed", {
         description: error.message || "Invalid email or password",
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
